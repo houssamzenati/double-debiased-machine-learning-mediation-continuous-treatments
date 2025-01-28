@@ -1,0 +1,8 @@
+numpy
+pandas
+seaborn
+jaxopt
+jaxlib
+jax
+scikit-learn
+statsmodels
