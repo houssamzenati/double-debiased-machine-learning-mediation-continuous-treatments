@@ -72,11 +72,17 @@ def _kme_cross_conditional_mean_outcomes(d, d_prime, y, t, m, x, settings):
     reg_lambda = settings['reg_lambda']
     reg_lambda_1 = settings['reg_lambda_tilde']
 
-    kernel = _get_kernel(settings)
+    kernel_treatment = _get_kernel(settings)
+    kernel_mediator = _get_kernel(settings)
+    kernel_covariates = _get_kernel(settings)
 
-    K_T = kernel.gram_matrix(t)
-    K_M = kernel.gram_matrix(m)
-    K_X = kernel.gram_matrix(x)
+    kernel_treatment.fit(t)
+    kernel_mediator.fit(m)
+    kernel_covariates.fit(x)
+
+    K_T = kernel_treatment.gram_matrix(t)
+    K_M = kernel_mediator.gram_matrix(m)
+    K_X = kernel_covariates.gram_matrix(x)
 
     K_T_M_X = K_T * K_M * K_X + n * reg_lambda * jnp.eye(n)
     K_T_X = K_T * K_X + n * reg_lambda_1 * jnp.eye(n)
@@ -87,14 +93,11 @@ def _kme_cross_conditional_mean_outcomes(d, d_prime, y, t, m, x, settings):
     K_M_inv_K_T_X = np.dot(K_M, inv_K_T_X)
     Y_inv_K_T_M_X = np.dot(y, inv_K_T_M_X)
 
-    t1 = np.array([1])
-    t0 = np.array([0])
-
     d = d * np.array([1])
     d_prime = d_prime * np.array([1])
 
-    K_Td = kernel.evaluate(t, d)
-    K_Td_prime = kernel.evaluate(t, d_prime)
+    K_Td = kernel_treatment.evaluate(t, d)
+    K_Td_prime = kernel_treatment.evaluate(t, d_prime)
 
     #
     half_d = np.dot(K_M_inv_K_T_X, K_Td * K_X) * K_X

@@ -1,0 +1,11 @@
+Experiment: expname : baselines_experiment, data : uniform, n_samples : 5000, mediator_dimension : 1, covariate_dimension : 1, alpha : 0.5, beta : 0.25, stochasticity : 1, gamma : 0.3, noise : uniform, 
+Running with estimator : ipw, regularization : True, sample_splits : 1, reg_lambda : 0.001, reg_lambda_tilde : 0.001, kernel : gauss, density : gaussian, bandwidth : 0.3, bandwidth_mode : heuristic, epsilon : 0.3, normalized : True, random_seed : 84, 
+bias_direct: 0.13572157891585654
+rmse_direct: 0.1686412037557585
+bias_indirect: 0.06982758620689664
+rmse_indirect: 0.0793627637866908
+bias_total: 0.07401486433736722
+rmse_total: 0.10127314717748191
+bias_mr: 0.13185364635446783
+rmse_mr: 0.18883448865881947
+coverage: 0.0

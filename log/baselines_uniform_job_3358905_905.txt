@@ -1,0 +1,2 @@
+Experiment: expname : sani_experiment_binomial, data : binomial, n_samples : 2000, mediator_dimension : 1, covariate_dimension : 1, alpha : 0.5, beta : 0.25, stochasticity : 1, gamma : 0.3, noise : binomial, 
+Running with estimator : kme_dml, regularization : True, sample_splits : 3, reg_lambda : 0.001, reg_lambda_tilde : 0.001, kernel : gauss, density : gaussian, bandwidth : 0.3, bandwidth_mode : heuristic, epsilon : 0.3, normalized : True, random_seed : 5, 

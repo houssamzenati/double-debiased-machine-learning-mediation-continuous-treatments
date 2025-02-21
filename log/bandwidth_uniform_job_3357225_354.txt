@@ -1,0 +1,11 @@
+Experiment: expname : bandwidth_experiment, data : uniform, n_samples : 1000, mediator_dimension : 1, covariate_dimension : 1, alpha : 0.5, beta : 0.25, stochasticity : 1, gamma : 0.3, noise : uniform, 
+Running with estimator : kme_dml, regularization : True, sample_splits : 1, reg_lambda : 0.001, reg_lambda_tilde : 0.001, kernel : gauss, density : gaussian, bandwidth : 0.3, bandwidth_mode : heuristic, epsilon : 0.0, normalized : True, random_seed : 77, 
+bias_direct: 0.08171504211328008
+rmse_direct: 0.11734479795260537
+bias_indirect: 0.026188674540837682
+rmse_indirect: 0.038656934840941265
+bias_total: 0.06726646476406707
+rmse_total: 0.08703864886053361
+bias_mr: 0.10265093723279196
+rmse_mr: 0.1304897455534518
+coverage: 0.8275862068965517

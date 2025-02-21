@@ -8,12 +8,12 @@
 #SBATCH --output=log/bandwidth_uniform_job_%A_%a.txt
 #SBATCH --error log/error_bandwidth_uniform_%A_%a.out
 #
-#SBATCH --array=0-999
+#SBATCH --array=0-599
 
 # change to your own path
-INPUT_FILE=/data/work/bandwidth_experiment_parameters.csv
+INPUT_FILE=/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/bandwidth_experiment_parameters.csv
 
-VALUES=({1..1000})
+VALUES=({1..600})
 THISJOBVALUE=${VALUES[$SLURM_ARRAY_TASK_ID]}
 i=1
 for PARAM in expname epsilon mode sample_size random_seed 

@@ -12,7 +12,7 @@
 
 # Specify the path to the config file
 # change to your own path
-INPUT_FILE=/data/work/baselines_experiment.csv
+INPUT_FILE=/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/baselines_experiment_parameters.csv
 
 VALUES=({1..1000})
 THISJOBVALUE=${VALUES[$SLURM_ARRAY_TASK_ID]}

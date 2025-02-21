@@ -77,7 +77,7 @@ for key in metrics.keys():
 
 regex_pattern = '{} {}\n'.format(task_pattern, metrics_pattern)
 
-EXPNAME = 'huber_experiment'
+EXPNAME = 'bandwidth_experiment'
 
 def experiment(args):
     """
@@ -274,10 +274,16 @@ def get_boxtplot(args):
 
 def get_parameters_experiment(args):
 
-    epsilon_values = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9]   # Example
+    # epsilon_values = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9]   # Example
+    # bandwidth_modes = ['heuristic', 'amse']   # Example
+    # # Define additional parameters
+    # sample_sizes = [500, 1000, 5000, 10000]
+
+    epsilon_values = [0.5]   # Example
     bandwidth_modes = ['heuristic', 'amse']   # Example
     # Define additional parameters
-    sample_sizes = [500, 1000, 5000, 10000]
+    sample_sizes = [500, 1000, 5000]
+
     random_seeds = list(range(100))  # Random seeds 
     experiment_name = 'bandwidth_experiment'
 

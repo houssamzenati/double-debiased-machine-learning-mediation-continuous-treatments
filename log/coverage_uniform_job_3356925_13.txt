@@ -1,0 +1,11 @@
+Experiment: expname : coverage_experiment, data : uniform, n_samples : 500, mediator_dimension : 1, covariate_dimension : 1, alpha : 0.5, beta : 0.25, stochasticity : 1, gamma : 0.3, noise : uniform, 
+Running with estimator : kme_dml, regularization : True, sample_splits : 1, reg_lambda : 0.001, reg_lambda_tilde : 0.001, kernel : gauss, density : gaussian, bandwidth : 0.3, bandwidth_mode : heuristic, epsilon : 0.3, normalized : True, random_seed : 13, 
+bias_direct: 0.08130962740758536
+rmse_direct: 0.0950176714438588
+bias_indirect: 0.07451474305193
+rmse_indirect: 0.0961606746660287
+bias_total: 0.14808270981185312
+rmse_total: 0.1701967369057427
+bias_mr: 0.11506787440256025
+rmse_mr: 0.13008351161125772
+coverage: 0.896551724137931

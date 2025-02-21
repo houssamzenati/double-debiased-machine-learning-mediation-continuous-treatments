@@ -10,7 +10,6 @@ sys.path.append(base_dir)
 from sklearn.model_selection import GridSearchCV
 from sklearn.base import clone
 
-from nuisances.utils import (_get_classifier, _get_regressor)
 from utils.decorators import fitted
 from utils.utils import _get_interactions, split_data, is_array_integer
 from nuisances.density import get_density_by_name

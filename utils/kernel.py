@@ -5,6 +5,7 @@ from jax import jit
 import jax as jax
 from functools import partial
 import numpy as np
+from scipy.spatial.distance import cdist
 
 @jax.jit
 def sqeuclidean_distance(x, y):
@@ -58,6 +59,8 @@ class Kernel:
     def _pairwise(self, X1, X2):
         pass
 
+    def fit(self, X):
+        pass
 
 class Gaussian(Kernel):
 
@@ -75,7 +78,7 @@ class Gaussian(Kernel):
             random_seed (int):  random seed for data generation process
 
         """
-        self._std = self._param
+        self._sigma = self._param
 
     def _pairwise(self, X1, X2):
         """
@@ -83,7 +86,17 @@ class Gaussian(Kernel):
             X1 (np.ndarray)
             X2 (np.ndarray)
         """
-        return gram(rbf_kernel, 1/(2* self._std ** 2),X1,X2)
+        return gram(rbf_kernel, 1/(2* self._sigma ** 2),X1,X2)
+    
+    def fit(self, X):
+        """
+        Args:
+            X (np.ndarray)
+        """
+        if X.ndim == 1:
+            X = X.reshape(-1, 1)
+        dists = cdist(X, X, 'sqeuclidean')
+        self._sigma = max(np.median(dists), self._param)
 
 class Exponential(Kernel):
 

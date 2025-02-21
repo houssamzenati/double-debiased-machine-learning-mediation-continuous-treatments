@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/experiment_sani_binomial.py", line 414, in <module>
+    experiment(args)
+  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/experiment_sani_binomial.py", line 132, in experiment
+    causal_results = causal_env.causal_experiment(estimator, t, m, x, y, data_settings, params)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/data/binomial.py", line 109, in causal_experiment
+    causal_effects = estimator.estimate(d, d_prime, t, m, x, y)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/estimators/kme_dml.py", line 128, in estimate
+    return self._estimate(d, d_prime, t, m, x, y)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/estimators/kme_dml.py", line 249, in _estimate
+    y_d_m_d[test_idx] = (k_dt / f_d_x * (y_ - psi_d_d)) / sum_score_d_d + psi_d_d
+    ~~~~~~~^^^^^^^^^^
+ValueError: shape mismatch: value array of shape (2667,2667) could not be broadcast to indexing result of shape (2667,)

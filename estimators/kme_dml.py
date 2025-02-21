@@ -117,7 +117,7 @@ class KMEDoubleMachineLearning(Estimator):
         if self.verbose:
             print(f"Nuisance models fitted")
 
-    def estimate(self,d, d_prime, t, m, x, y):
+    def estimate(self, d, d_prime, t, m, x, y):
 
         if self._bandwidth_mode == 'amse':
             self.fit_bandwidth(t)
@@ -304,5 +304,3 @@ class KMEDoubleMachineLearning(Estimator):
         bias_d_m_d_prime = (mr_d_m_d_prime - mr_d_m_d_prime_epsilon)/((self._bandwidth/self._epsilon)**2*(1-self._epsilon)**2)
 
         self._bandwidth = (v_d_m_d_prime/(4*bias_d_m_d_prime)**2)**(1/5)*n**(-1/5)
-
-        print(self._bandwidth)

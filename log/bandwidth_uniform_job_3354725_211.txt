@@ -1,0 +1,11 @@
+Experiment: expname : huber_experiment, data : uniform, n_samples : 5000, mediator_dimension : 1, covariate_dimension : 1, alpha : 0.5, beta : 0.25, stochasticity : 1, gamma : 0.3, noise : uniform, 
+Running with estimator : kme_dml, regularization : True, sample_splits : 1, reg_lambda : 0.001, reg_lambda_tilde : 0.001, kernel : gauss, density : gaussian, bandwidth : 0.3, bandwidth_mode : amse, epsilon : 0.5, normalized : True, random_seed : 11, 
+bias_direct: 0.09918070714552521
+rmse_direct: 0.11321163264188727
+bias_indirect: 0.031593456913229276
+rmse_indirect: 0.03763916454952245
+bias_total: 0.06944372167924459
+rmse_total: 0.08400190659617043
+bias_mr: 0.05743029350462521
+rmse_mr: 0.07247191676344301
+coverage: 0.8620689655172413

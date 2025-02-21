@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/experiment_sani_binomial.py", line 414, in <module>
+    experiment(args)
+  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/experiment_sani_binomial.py", line 126, in experiment
+    estimator = get_estimator_by_name(param_settings)(param_settings, False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/utils/loader.py", line 28, in get_estimator_by_name
+    raise NotImplementedError
+NotImplementedError

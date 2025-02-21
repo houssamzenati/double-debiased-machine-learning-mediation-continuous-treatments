@@ -1,0 +1,11 @@
+Experiment: expname : nonparametric_experiment, data : uniform, n_samples : 1000, mediator_dimension : 1, covariate_dimension : 1, alpha : 0.0, beta : 0.0, stochasticity : 1, gamma : 0.3, noise : uniform, 
+Running with estimator : kme_dml, regularization : True, sample_splits : 1, reg_lambda : 0.001, reg_lambda_tilde : 0.001, kernel : linear, density : conditional_kernel, bandwidth : 0.3, bandwidth_mode : heuristic, epsilon : 0.1, normalized : True, random_seed : 79, 
+bias_direct: 0.0580924095097004
+rmse_direct: 0.07062581294335893
+bias_indirect: 0.01744714636627483
+rmse_indirect: 0.02186318217825805
+bias_total: 0.07174884024664241
+rmse_total: 0.08132468892425292
+bias_mr: 0.05965996362311004
+rmse_mr: 0.06951771405716713
+coverage: 1.0
