@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/experiment_bandwidth_uniform.py", line 344, in <module>
-    experiment(args)
-  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/experiment_bandwidth_uniform.py", line 135, in experiment
-    save_result(param_settings, causal_results, data_settings)
-  File "/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/utils/parse.py", line 54, in save_result
-    os.makedirs(results_dir)
-  File "<frozen os>", line 225, in makedirs
-FileExistsError: [Errno 17] File exists: 'results/bandwidth_experiment/uniform/21-02-2025'
