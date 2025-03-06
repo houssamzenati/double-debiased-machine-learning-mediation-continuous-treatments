@@ -154,6 +154,10 @@ results/
 
 boxplots/
 
+# Ignore boxplots
+
+log/
+
 # Ignore csv files
 
 *.csv

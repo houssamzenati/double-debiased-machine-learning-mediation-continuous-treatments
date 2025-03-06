@@ -10,9 +10,11 @@ import numpy as np
 from sklearn.linear_model import LassoCV, LogisticRegressionCV, RidgeCV, LinearRegression
 
 from estimators.base import Estimator
-from utils.config import ALPHAS, CV_FOLDS, TINY
 from utils.decorators import fitted
 
+ALPHAS = np.logspace(-5, 5, 8)
+CV_FOLDS = 5
+TINY = 1.e-12
 
 class Linear(Estimator):
 

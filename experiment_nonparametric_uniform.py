@@ -214,116 +214,85 @@ def get_tables_mr(parameters):
         print(f"LaTeX table saved for n_samples = {n_samples}: {latex_filename}")
 
 
-def get_tables_mr_with_multicolumns(parameters):
-    # Load and preprocess data
+def get_tables(parameters):
     fd = get_df(regex_pattern, columns, results_file=f'results/{EXPNAME}/')
     df = preprocess(fd)
 
-    # Output directory for tables
     figures_dir = 'tables/'
-    if not os.path.exists(figures_dir):
-        os.makedirs(figures_dir)
+    os.makedirs(figures_dir, exist_ok=True)
 
-    # Define the estimators and their corresponding labels
     estimators = {
         'IPW': 'ipw',
         'DML': 'kme_dml',
         'KME': 'kme_g_computation',
     }
 
-    # Define densities and kernels combinations
     densities = ["gaussian", "conditional_kernel"]
     kernels = ["gauss", "linear"]
-
-    # Define the metrics to include
     metrics = ['bias_mr', 'rmse_mr']
 
-    # Initialize a dictionary to store results for each combination
     tables = {}
-
+    
     for density in densities:
         for kernel in kernels:
-            # Filter the DataFrame for the current density and kernel
             filtered_df = df[(df['density'] == density) & (df['kernel'] == kernel)]
-
-            # Initialize a list to store summary rows
             summary_rows = []
-
+            
             for estimator, col in estimators.items():
-                # Filter the DataFrame for the current estimator
                 estimator_df = filtered_df[filtered_df['estimator'] == col]
-
-                # Group by 'n_samples' and calculate mean and std for metrics
-                mean_values = estimator_df.groupby('n_samples')[metrics].mean().reset_index()
-                std_values = estimator_df.groupby('n_samples')['bias_mr'].std().reset_index()
-
-                # Merge mean and std values
-                summary = pd.merge(mean_values, std_values, on='n_samples', suffixes=('', '_std'))
-
-                # Rename the std column
-                summary.rename(columns={'bias_mr_std': 'std_mr'}, inplace=True)
-
-                # Add the estimator label to the summary DataFrame
+                summary = estimator_df.groupby('n_samples')[metrics].mean().reset_index()
                 summary.insert(0, 'Estimator', estimator)
-
-                # Append the results to the summary_rows list
                 summary_rows.append(summary)
-
-            # Concatenate all summary DataFrames
+            
             summary_df = pd.concat(summary_rows, ignore_index=True)
-
-            # Reorder the columns
-            ordered_columns = ['Estimator', 'n_samples', 'bias_mr', 'std_mr', 'rmse_mr']
-            summary_df = summary_df[ordered_columns]
-
-            # Store the table in the dictionary
+            summary_df = summary_df[['Estimator', 'n_samples', 'bias_mr', 'rmse_mr']]
             tables[(density, kernel)] = summary_df
-
-    # Generate a single LaTeX table with multicolumns
-    with open(f"{figures_dir}/mr_summary_table.tex", 'w') as latex_file:
+    
+    with open(f"{figures_dir}/nuisances_mr_summary_table.tex", 'w') as latex_file:
         latex_file.write("\\begin{table}[h]\n")
         latex_file.write("    \\centering\n")
         latex_file.write("\\caption{Performance Summary by Density and Kernel}\n")
-        latex_file.write("\\begin{tabular}{llcccccccc}\n")
+        latex_file.write("\\begin{tabular}{ll" + "c" * (len(densities) * len(kernels) * 2) + "}\n")
         latex_file.write("\\toprule\n")
-        latex_file.write("Estimator & $n_\\text{samples}$ & ")
-
-        # Add multicolumn headers
-        densities_titles = ["gaussian", "Conditional-Kernel"]
-        for density in densities_titles:
-            for kernel in kernels:
-                latex_file.write(f"\\multicolumn{{2}}{{c}}{{{density.capitalize()}-{kernel.capitalize()}}} ")
-                if not (density == densities_titles[-1] and kernel == kernels[-1]):
-                    latex_file.write("& ")
+        
+        # Header row with reordered scenarios
+        scenario_order = ["Scenario i)", "Scenario ii)", "Scenario iii)", "Scenario iv)"]
+        latex_file.write("Estimator & $n_\\text{samples}$ ")
+        for scenario in scenario_order:
+            latex_file.write(f"& \\multicolumn{{2}}{{c}}{{{scenario}}} ")
         latex_file.write("\\\\\n")
-
-        # Add subheaders for Bias (std) and RMSE
-        latex_file.write(" & & Bias (std) & RMSE & Bias (std) & RMSE & Bias (std) & RMSE & Bias (std) & RMSE \\\ \n")
+        
+        # Sub-header row
+        latex_file.write(" &  & " + " & ".join(["Bias & RMSE"] * len(scenario_order)) + "\\\\ \n")
         latex_file.write("\\midrule\n")
-
-        # Write the table rows for each estimator and sample size
+        
         for n_samples in sorted(df['n_samples'].unique()):
             for estimator in estimators.keys():
-                latex_file.write(f"{estimator} & {n_samples} & ")
-                for density in densities:
-                    for kernel in kernels:
-                        sub_df = tables[(density, kernel)]
-                        row = sub_df[(sub_df['Estimator'] == estimator) & (sub_df['n_samples'] == n_samples)]
-                        if not row.empty:
-                            row = row.iloc[0]
-                            latex_file.write(f"{row['bias_mr']:.4f} ({row['std_mr']:.4f}) & {row['rmse_mr']:.4f} ")
-                        else:
-                            latex_file.write("- & - ")
-                        if not (density == densities[-1] and kernel == kernels[-1]):
-                            latex_file.write("& ")
+                latex_file.write(f"{estimator} & {n_samples} ")
+                for scenario in scenario_order:
+                    scenario_map = {
+                        "Scenario i)": ("conditional_kernel", "gauss"),
+                        "Scenario ii)": ("gaussian", "gauss"),
+                        "Scenario iii)": ("conditional_kernel", "linear"),
+                        "Scenario iv)": ("gaussian", "linear")
+                    }
+                    density, kernel = scenario_map[scenario]
+                    sub_df = tables[(density, kernel)]
+                    row = sub_df[(sub_df['Estimator'] == estimator) & (sub_df['n_samples'] == n_samples)]
+                    if not row.empty:
+                        row = row.iloc[0]
+                        latex_file.write(f"& {row['bias_mr']:.4f} & {row['rmse_mr']:.4f} ")
+                    else:
+                        latex_file.write("& - & - ")
                 latex_file.write("\\\\\n")
-
+        
         latex_file.write("\\bottomrule\n")
         latex_file.write("\\end{tabular}\n")
         latex_file.write("\\label{tab:mr_summary_table}\n")
         latex_file.write("\\end{table}\n")
+    
+    print("LaTeX summary table saved at 'tables/nuisances_mr_summary_table.tex'")
 
-    print("LaTeX summary table saved at 'tables/mr_summary_table.tex'")
 
 def get_parameters_experiment(args):
 
@@ -336,7 +305,7 @@ def get_parameters_experiment(args):
     random_seeds = list(range(100))  # Random seeds 
 
     # Open or create a CSV file to write the values
-    with open('nonparametric_experiment_parameters.csv', mode='w', newline='') as file:
+    with open('experiment_parameters/nonparametric_experiment_parameters.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
 
         # Write each line with its number 
@@ -350,7 +319,7 @@ def get_parameters_experiment(args):
                             writer.writerow([line_number, estimator, sample_size, density, kernel, seed])
                             line_number += 1
 
-    print("The CSV file 'nonparametric_experiment_parameters.csv' has been created.")
+    print("The CSV file 'experiment_parameters/nonparametric_experiment_parameters.csv' has been created.")
     
 
 if __name__ == "__main__":
@@ -396,7 +365,7 @@ if __name__ == "__main__":
         sequential_experiments(args)
 
     if args.results:
-        get_tables_mr_with_multicolumns(args)
+        get_tables(args)
 
     if args.get_parameters_experiment:
         get_parameters_experiment(args)

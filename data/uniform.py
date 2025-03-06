@@ -7,12 +7,9 @@ sys.path.append(base_dir)
 from sklearn.preprocessing import StandardScaler
 
 import numpy as np
-from scipy.special import expit, logit
-from scipy.stats import multivariate_normal
-from scipy.stats import norm, rv_continuous
 
 from data.base import CausalEnvironment
-from utils.utils import display_experiment_configuration, display_experiment_results, write_metrics, split_data
+from utils.utils import display_experiment_results
 
 params = {
     'alpha':0.5,
@@ -49,6 +46,7 @@ class UniformEnv(CausalEnvironment):
         self.coeff = self._settings['gamma']
         self.stochasticity = self._settings['stochasticity']
         self.noise = self._settings['noise']
+        self.mediator_dimension = self._settings['mediator_dimension']
 
     def generate_causal_data(self, data_settings, 
                             params=params,
@@ -76,7 +74,8 @@ class UniformEnv(CausalEnvironment):
         T = self.coeff*X+W
         M = self.coeff*T+self.coeff*X+V
         Y = self.coeff*T+self.coeff*M+self.alpha*T*M+self.coeff*X+self.beta*T**3+U
-
+        if self.mediator_dimension == 5:
+           M =+ self.stochasticity*rng.uniform(-2, 2, size=(n_samples, 5))
         return X, T, M, Y, params
 
     def get_causal_effects(self, X, t, t_prime, data_settings, 

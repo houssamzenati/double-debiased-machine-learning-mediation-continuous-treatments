@@ -274,11 +274,6 @@ def get_boxtplot(args):
 
 def get_parameters_experiment(args):
 
-    # epsilon_values = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9]   # Example
-    # bandwidth_modes = ['heuristic', 'amse']   # Example
-    # # Define additional parameters
-    # sample_sizes = [500, 1000, 5000, 10000]
-
     epsilon_values = [0.5]   # Example
     bandwidth_modes = ['heuristic', 'amse']   # Example
     # Define additional parameters
@@ -288,7 +283,7 @@ def get_parameters_experiment(args):
     experiment_name = 'bandwidth_experiment'
 
     # Open or create a CSV file to write the values
-    with open('bandwidth_experiment_parameters.csv', mode='w', newline='') as file:
+    with open('experiment_parameters/bandwidth_experiment_parameters.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
 
         # Write each line with its number 
@@ -305,7 +300,7 @@ def get_parameters_experiment(args):
                         line_number += 1
 
 
-    print("The CSV file 'bandwidth_experiment_parameters.csv' has been created.")
+    print("The CSV file 'experiment_parameters/bandwidth_experiment_parameters.csv' has been created.")
     
 
 if __name__ == "__main__":

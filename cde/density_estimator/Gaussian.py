@@ -86,6 +86,6 @@ class GaussianDensityEstimation(BaseDensityEstimator):
      """
     assert self.fitted, "model must be fitted for predictions"
 
-    representation = self.representation(X)
+    representation = self.representation(X).squeeze()
     return norm(loc=representation, scale=self.scale).pdf(Y)
 

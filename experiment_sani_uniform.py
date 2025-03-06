@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from utils.parse import get_df, preprocess, save_result
 from utils.loader import get_estimator_by_name
 from utils.utils import display_experiment_configuration
-from data.binomial import BinomialEnv
+from data.uniform import UniformEnv
 
 param_settings = {
     'estimator': None,
@@ -77,7 +77,7 @@ for key in metrics.keys():
 
 regex_pattern = '{} {}\n'.format(task_pattern, metrics_pattern)
 
-EXPNAME = 'sani_experiment_binomial'
+EXPNAME = 'sani_experiment_uniform'
 
 def experiment(args):
     """
@@ -104,7 +104,7 @@ def experiment(args):
         'expname': EXPNAME,
         'data': 'binomial',
         'n_samples': args.n_samples,
-        'mediator_dimension': 1,
+        'mediator_dimension': args.mediator_dimension,
         'covariate_dimension': 1,
         'alpha': args.alpha,
         'beta': args.beta,
@@ -117,7 +117,7 @@ def experiment(args):
     display_experiment_configuration(data_settings, param_settings)
 
     ### Load causal environment
-    causal_env = BinomialEnv(data_settings)
+    causal_env = UniformEnv(data_settings)
 
     ### Load data
     causal_data = causal_env.generate_causal_data(data_settings, random_state=param_settings['random_seed'])
@@ -141,8 +141,8 @@ def sequential_experiments(args):
 
     """
 
-    estimators_list = ['ipw', 'linear', 'kme_g_computation', 'kme_dml', 'sani_dml']
-    sample_sizes = [2000, 5000, 8000]
+    estimators_list = ['kme_dml', 'sani_dml', 'sani_kme_dml']
+    sample_sizes = [500, 1000, 5000]
 
 
     for estimator in estimators_list:
@@ -153,95 +153,135 @@ def sequential_experiments(args):
                 args.random_seed = rd     
                 experiment(args)
 
-
-
-                                                                              
-def get_tables(args):
-    
+def get_tables(parameters):
     fd = get_df(regex_pattern, columns, results_file=f'results/{EXPNAME}/')
     df = preprocess(fd)
 
     figures_dir = 'tables/'
     if not os.path.exists(figures_dir):
         os.makedirs(figures_dir)
-    # Define the estimators and their corresponding labels
+    
     estimators = {
-        'OLS': 'linear',
-        'IPW': 'ipw',
-        'KME': 'kme_g_computation',
         'DML': 'kme_dml',
         'SANI-DML': 'sani_dml',
+        'SANI-KME-DML': 'sani_kme_dml'
     }
 
-    # Define the metrics to be averaged
     metrics = ['bias_mr', 'rmse_mr']
-
-    # Initialize an empty list to store summary rows
-    summary_rows = []
-
-    # Iterate over each estimator
-    for estimator, col in estimators.items():
-        # Filter the DataFrame for the current estimator
-        estimator_df = df[df['estimator'] == col]
+    
+    for mediator_value in [1, 5]:
+        mediator_df = df[df['mediator_dimension'] == mediator_value]
+        summary_rows = []
         
-        # Group by 'n_samples' and calculate the mean and std for the specified metrics across 'random_seed'
-        mean_values = estimator_df.groupby('n_samples')[metrics].mean().reset_index()
-        std_values = estimator_df.groupby('n_samples')[['bias_mr']].std().reset_index()
+        for estimator, col in estimators.items():
+            estimator_df = mediator_df[mediator_df['estimator'] == col]
+            
+            mean_values = estimator_df.groupby('n_samples')[metrics].mean().reset_index()
+            std_values = estimator_df.groupby('n_samples')[['bias_mr']].std().reset_index()
+            
+            summary = pd.merge(mean_values, std_values, on='n_samples', suffixes=('', '_std'))
+            summary.rename(columns={'bias_mr_std': 'std_mr'}, inplace=True)
+            summary.insert(0, 'Estimator', estimator)
+            summary_rows.append(summary)
+
+        summary_df = pd.concat(summary_rows, ignore_index=True)
+        ordered_columns = ['Estimator', 'n_samples', 'bias_mr', 'std_mr', 'rmse_mr']
+        summary_df = summary_df[ordered_columns]
+
+        n_samples_values = summary_df['n_samples'].unique()
+        summary_dfs = {n: summary_df[summary_df['n_samples'] == n].reset_index(drop=True) for n in n_samples_values}
         
-        # Merge mean and std values
-        summary = pd.merge(mean_values, std_values, on='n_samples', suffixes=('', '_std'))
+        for n_samples, df_table in summary_dfs.items():
+            df_table = df_table.drop(columns=['n_samples']).round(4)
+            latex_filename = f"tables/sani_experiment_uniform_mediator_{mediator_value}_n_samples_{n_samples}.tex"
+            df_table.to_latex(latex_filename, index=False)
+            print(f"LaTeX table saved for mediator = {mediator_value}, n_samples = {n_samples}: {latex_filename}")
+                                                                              
+# def get_tables(args):
+    
+#     fd = get_df(regex_pattern, columns, results_file=f'results/{EXPNAME}/')
+#     df = preprocess(fd)
+#     import pdb; pdb.set_trace()
+#     # Create a directory to save the figures if it doesn't exist
+#     figures_dir = 'tables/'
+#     if not os.path.exists(figures_dir):
+#         os.makedirs(figures_dir)
+#     # Define the estimators and their corresponding labels
+#     estimators = {
+#         'DML': 'kme_dml',
+#         'SANI-DML': 'sani_dml',
+#         'SANI-KME-DML': 'sani_kme_dml'
+#     }
+
+#     # Define the metrics to be averaged
+#     metrics = ['bias_mr', 'rmse_mr']
+
+#     # Initialize an empty list to store summary rows
+#     summary_rows = []
+
+#     # Iterate over each estimator
+#     for estimator, col in estimators.items():
+#         # Filter the DataFrame for the current estimator
+#         estimator_df = df[df['estimator'] == col]
         
-        # Rename the std columns
-        summary.rename(columns={
-            'bias_mr_std': 'std_mr',
-        }, inplace=True)
-
-        # Add the estimator label to the summary DataFrame
-        summary.insert(0, 'Estimator', estimator)
+#         # Group by 'n_samples' and calculate the mean and std for the specified metrics across 'random_seed'
+#         mean_values = estimator_df.groupby('n_samples')[metrics].mean().reset_index()
+#         std_values = estimator_df.groupby('n_samples')[['bias_mr']].std().reset_index()
         
-        # Append the results to the summary_rows list
-        summary_rows.append(summary)
+#         # Merge mean and std values
+#         summary = pd.merge(mean_values, std_values, on='n_samples', suffixes=('', '_std'))
+        
+#         # Rename the std columns
+#         summary.rename(columns={
+#             'bias_mr_std': 'std_mr',
+#         }, inplace=True)
 
-    # Concatenate all summary DataFrames
-    summary_df = pd.concat(summary_rows, ignore_index=True)
+#         # Add the estimator label to the summary DataFrame
+#         summary.insert(0, 'Estimator', estimator)
+        
+#         # Append the results to the summary_rows list
+#         summary_rows.append(summary)
 
-    # Reorder the columns as per your request: for each category, the order is bias, std, rmse
-    ordered_columns = ['Estimator', 'n_samples', 
-                    'bias_mr', 'std_mr', 'rmse_mr']
+#     # Concatenate all summary DataFrames
+#     summary_df = pd.concat(summary_rows, ignore_index=True)
 
-    # Reorder the columns in the DataFrame
-    summary_df = summary_df[ordered_columns]
+#     # Reorder the columns as per your request: for each category, the order is bias, std, rmse
+#     ordered_columns = ['Estimator', 'n_samples', 
+#                     'bias_mr', 'std_mr', 'rmse_mr']
 
-    # Get unique values of n_samples
-    n_samples_values = summary_df['n_samples'].unique()
+#     # Reorder the columns in the DataFrame
+#     summary_df = summary_df[ordered_columns]
 
-    # Separate into different DataFrames for each n_samples value
-    summary_dfs = {n: summary_df[summary_df['n_samples'] == n].reset_index(drop=True) for n in n_samples_values}
+#     # Get unique values of n_samples
+#     n_samples_values = summary_df['n_samples'].unique()
 
-    # Save each summary DataFrame to a LaTeX table
-    for n_samples, df in summary_dfs.items():
+#     # Separate into different DataFrames for each n_samples value
+#     summary_dfs = {n: summary_df[summary_df['n_samples'] == n].reset_index(drop=True) for n in n_samples_values}
 
-        # Remove the 'n_samples' column before saving
-        df = df.drop(columns=['n_samples'])
-        df = df.round(4)
+#     # Save each summary DataFrame to a LaTeX table
+#     for n_samples, df in summary_dfs.items():
 
-        latex_filename = f"tables/sani_experiment_binomial_n_samples_{n_samples}.tex"
-        df.to_latex(latex_filename, index=False)
-        print(f"LaTeX table saved for n_samples = {n_samples}: {latex_filename}")
+#         # Remove the 'n_samples' column before saving
+#         df = df.drop(columns=['n_samples'])
+#         df = df.round(4)
+
+#         latex_filename = f"tables/sani_experiment_uniform_n_samples_{n_samples}.tex"
+#         df.to_latex(latex_filename, index=False)
+#         print(f"LaTeX table saved for n_samples = {n_samples}: {latex_filename}")
      
 def get_parameters_experiment(args):
 
     # Define additional parameters
-    estimators_list = ['ipw', 
-                       'linear', 
-                       'kme_g_computation', 
-                       'kme_dml', 
-                       'sani_dml']
-    sample_sizes = [2000, 5000, 8000]
+
+    estimators_list = ['kme_dml', 
+                    #    'sani_dml', 
+                       'sani_kme_dml']
+    mediator_dimensions = [5]
+    sample_sizes = [500, 1000, 5000]
     random_seeds = list(range(100))  # Random seeds 
 
     # Open or create a CSV file to write the values
-    with open('experiment_parameters/sani_experiment_binomial_parameters.csv', mode='w', newline='') as file:
+    with open('experiment_parameters/sani_experiment_uniform_parameters.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
 
         # Write each line with its number 
@@ -249,11 +289,12 @@ def get_parameters_experiment(args):
 
         for estimator in estimators_list:
             for sample_size in sample_sizes:
-                for seed in random_seeds:
-                    writer.writerow([line_number, estimator, sample_size, seed])
-                    line_number += 1
+                for dimension in mediator_dimensions:
+                    for seed in random_seeds:
+                        writer.writerow([line_number, estimator, sample_size, dimension, seed])
+                        line_number += 1
 
-    print("The CSV file 'experiment_parameters/sani_experiment_binomial_parameters.csv' has been created.")
+    print("The CSV file 'experiment_parameters/sani_experiment_uniform_parameters.csv' has been created.")
     
 
 if __name__ == "__main__":
@@ -279,12 +320,14 @@ if __name__ == "__main__":
                                  'linear',
                                  'kme_g_computation',
                                  'kme_dml',
-                                 'sani_dml'], help='name of estimator')
+                                 'sani_dml',
+                                 'sani_kme_dml'], help='name of estimator')
     parser.add_argument('--n_samples', nargs="?", type=int,
                         default=2000, help='Number of samples')
     parser.add_argument('--random_seed', nargs="?", type=int,
                         default=42, help='random seed')
-    parser.add_argument('--noise', nargs="?", default='binomial', choices=['binomial', 'gaussian'], help='nature of noise')
+    parser.add_argument('--mediator_dimension', nargs="?", type=int, default=1)
+    parser.add_argument('--noise', nargs="?", default='uniform', choices=['uniform', 'gaussian'], help='nature of noise')
     parser.add_argument('--expname', nargs="?", default=EXPNAME, help='name of experiment')
 
     args = parser.parse_args()

@@ -170,7 +170,7 @@ def get_parameters_experiment(args):
     random_seeds = list(range(100))  # Random seeds 
 
     # Open or create a CSV file to write the values
-    with open('coverage_experiment_parameters.csv', mode='w', newline='') as file:
+    with open('experiment_parameters/coverage_experiment_parameters.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
 
         # Write each line with its number 
@@ -181,7 +181,7 @@ def get_parameters_experiment(args):
                 line_number += 1
 
 
-    print("The CSV file 'coverage_experiment_parameters.csv' has been created.")
+    print("The CSV file 'experiment_parameters/coverage_experiment_parameters.csv' has been created.")
     
 
 if __name__ == "__main__":

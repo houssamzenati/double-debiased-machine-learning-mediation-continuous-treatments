@@ -6,14 +6,12 @@ import jax.numpy as jnp
 base_dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(base_dir)
 
-from utils.kernel import Gaussian, Exponential
-
 from estimators.ipw import ImportanceWeighting
 from estimators.linear import Linear
 from estimators.kme_g_computation import KMEGComputation
 from estimators.kme_dml import KMEDoubleMachineLearning
-
-from data.uniform import UniformEnv
+from estimators.sani_dml import SaniDoubleMachineLearning
+from estimators.sani_kme_dml import SaniKMEDoubleMachineLearning
 
 def get_estimator_by_name(settings):
     if settings['estimator'] == 'ipw':
@@ -24,15 +22,12 @@ def get_estimator_by_name(settings):
         return KMEGComputation
     elif settings['estimator'] == 'kme_dml':
         return KMEDoubleMachineLearning
+    elif settings['estimator'] == 'sani_dml':
+        return SaniDoubleMachineLearning
+    elif settings['estimator'] == 'sani_kme_dml':
+        return SaniKMEDoubleMachineLearning
     else:
         raise NotImplementedError
 
 
-def get_kernel_by_name(settings):
-    if settings['kernel'] == 'gauss':
-        return Gaussian
-    elif settings['kernel'] == 'exp':
-        return Exponential
-    else:
-        raise NotImplementedError
     

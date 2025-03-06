@@ -52,23 +52,23 @@ def split_data(causal_data, nuisances, test_size=0.5, random_state=42):
     return causal_data_nuisance, causal_data_estimation
 
 
-def _get_train_test_lists(crossfit, n, x):
-    """
-    Obtain train and test folds
+# def _get_train_test_lists(crossfit, n, x):
+#     """
+#     Obtain train and test folds
 
-    Returns
-    -------
-    train_test_list : list
-        indexes with train and test indexes
-    """
-    if crossfit < 2:
-        train_test_list = [[np.arange(n), np.arange(n)]]
-    else:
-        kf = KFold(n_splits=crossfit)
-        train_test_list = list()
-        for train_index, test_index in kf.split(x):
-            train_test_list.append([train_index, test_index])
-    return train_test_list
+#     Returns
+#     -------
+#     train_test_list : list
+#         indexes with train and test indexes
+#     """
+#     if crossfit < 2:
+#         train_test_list = [[np.arange(n), np.arange(n)]]
+#     else:
+#         kf = KFold(n_splits=crossfit)
+#         train_test_list = list()
+#         for train_index, test_index in kf.split(x):
+#             train_test_list.append([train_index, test_index])
+#     return train_test_list
 
 def _get_interactions(interaction, *args):
     """
@@ -138,13 +138,13 @@ def display_experiment_results(metrics):
     for key in metrics.keys():
         print('{}: {}'.format(key, metrics[key]))
 
-def write_metrics(error_total, error_direct, error_indirect):
+# def write_metrics(error_total, error_direct, error_indirect):
 
-    metrics = instantiate_metrics()
-    metrics['error_total'] = error_total
-    metrics['error_direct'] = error_direct
-    metrics['error_indirect'] = error_indirect
-    # metrics['true_total'] = true_total[0]
-    # metrics['true_direct'] = true_direct[0]
-    # metrics['true_indirect'] = true_indirect[0]
-    return metrics
+#     metrics = instantiate_metrics()
+#     metrics['error_total'] = error_total
+#     metrics['error_direct'] = error_direct
+#     metrics['error_indirect'] = error_indirect
+#     # metrics['true_total'] = true_total[0]
+#     # metrics['true_direct'] = true_direct[0]
+#     # metrics['true_indirect'] = true_indirect[0]
+#     return metrics

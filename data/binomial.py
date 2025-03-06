@@ -7,17 +7,9 @@ sys.path.append(base_dir)
 from sklearn.preprocessing import StandardScaler
 
 import numpy as np
-from scipy.special import expit, logit
-from scipy.stats import multivariate_normal
-from scipy.stats import norm, rv_continuous
 
 from data.base import CausalEnvironment
-from utils.utils import display_experiment_configuration, display_experiment_results, write_metrics, split_data
-
-params = {
-    'alpha':0.5,
-    'beta':0.25,
-    }
+from utils.utils import display_experiment_results
 
 
 class BinomialEnv(CausalEnvironment):
@@ -34,24 +26,9 @@ class BinomialEnv(CausalEnvironment):
         grid = np.arange(-1.5, 1.5, 0.1)
         self.grid = np.delete(grid, 15)
         self.name = 'Binomial'
-        if self._settings:
-            self.alpha = self._settings['alpha']
-            self.beta = self._settings['beta']
-        else:
-            self.alpha = params['alpha']
-            self.beta = params['beta']
-
-        self.coeff = self._settings['gamma']
-        self.stochasticity = self._settings['stochasticity']
-
-        self.alpha = self._settings['alpha']
-        self.beta = self._settings['beta']
-        self.coeff = self._settings['gamma']
-        self.stochasticity = self._settings['stochasticity']
-        self.noise = self._settings['noise']
 
     def generate_causal_data(self, data_settings, 
-                            params=params,
+                            params=None,
                             random_state=42,
                             mode='id'):
         

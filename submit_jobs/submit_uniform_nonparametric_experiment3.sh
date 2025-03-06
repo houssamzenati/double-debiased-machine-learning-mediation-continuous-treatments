@@ -12,9 +12,9 @@
 
 # Specify the path to the config file
 # change to your own path
-INPUT_FILE=/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/nonparametric_experiment_parameters.csv
+INPUT_FILE=/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/experiment_parameters/nonparametric_experiment_parameters.csv
 
-VALUES=({1001..2000})
+VALUES=({2000..3000})
 THISJOBVALUE=${VALUES[$SLURM_ARRAY_TASK_ID]}
 i=1
 for PARAM in estimator sample_size density kernel random_seed 

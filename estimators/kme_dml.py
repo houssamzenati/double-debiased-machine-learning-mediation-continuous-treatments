@@ -12,11 +12,6 @@ from utils.decorators import fitted
 from sklearn.model_selection import KFold
 from scipy.stats import norm
 
-def db_exp_kernel(x1, x2, variance = 1):
-    return exp(-1 * (np.linalg.norm(x1-x2)) / (2*variance))
-
-def gram_matrix(xs):
-    return rbf_kernel(xs, gamma=0.5)
 def gaussian_kernel(u):
     return np.exp(-0.5 * u**2 )/(np.sqrt(2*np.pi))
 def gaussian_kernel_h(u,h_2):

@@ -8,13 +8,13 @@
 #SBATCH --output=log/baselines_uniform_job_%A_%a.txt
 #SBATCH --error log/error_baselines_uniform_%A_%a.out
 #
-#SBATCH --array=0-199
+#SBATCH --array=0-999
 
 # Specify the path to the config file
 # change to your own path
-INPUT_FILE=/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/baselines_experiment_parameters.csv
+INPUT_FILE=/scratch/hzenati/double-debiased-machine-learning-mediation-continuous-treatments/experiment_parameters/baselines_experiment_parameters.csv
 
-VALUES=({1001..1200})
+VALUES=({1..1000})
 THISJOBVALUE=${VALUES[$SLURM_ARRAY_TASK_ID]}
 i=1
 for PARAM in estimator sample_size random_seed 

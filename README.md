@@ -16,13 +16,13 @@ pip install -r requirements.txt
 python experiment_baselines_uniform.py --get_parameters_experiment
 ```
 ```
-sbatch submit_uniform_baselines_experiment.sh 
+sbatch submit_jobs/submit_uniform_baselines_experiment.sh 
 ```
 #### Otherwise
 ```
 python experiment_baselines_uniform.py --sequential_run
 ```
-#### Get Figure 2, Tables 1, 2, 3
+#### Get Figure 2, Table 3
 ```
 python experiment_baselines_uniform.py --results
 ```
@@ -33,7 +33,7 @@ python experiment_baselines_uniform.py --results
 python experiment_bandwidth_uniform.py --get_parameters_experiment
 ```
 ```
-sbatch submit_uniform_bandwidth_experiment.sh 
+sbatch submit_jobs/submit_uniform_bandwidth_experiment.sh 
 ```
 #### Otherwise
 
@@ -51,7 +51,7 @@ python experiment_bandwidth_uniform.py --results
 python experiment_coverage_uniform.py --get_parameters_experiment
 ```
 ```
-sbatch submit_uniform_coverage_experiment.sh 
+sbatch submit_jobs/submit_uniform_coverage_experiment.sh 
 ```
 #### Otherwise
 ```
@@ -61,6 +61,52 @@ python experiment_coverage_uniform.py --sequential_run
 ```
 python experiment_coverage_uniform.py --results
 ```
+
+### Parametric/nonparametric experiment 
+
+#### If you use a slurm cluster  
+```
+python experiment_nonparametric_uniform.py --get_parameters_experiment
+```
+```
+sbatch submit_jobs/submit_uniform_nonparametric_experiment.sh 
+```
+#### Otherwise
+```
+python experiment_nonparametric_uniform.py --sequential_run
+```
+#### Get Table 5
+```
+python experiment_nonparametric_uniform.py --results
+```
+
+## Experiments to compare with (Sani et al, 2024)
+
+#### If you use a slurm cluster  
+```
+python experiment_sani_uniform.py --get_parameters_experiment
+python experiment_sani_binomial.py --get_parameters_experiment
+
+```
+```
+sbatch submit_jobs/submit_uniform_sani_experiment.sh 
+sbatch submit_jobs/submit_binomial_sani_experiment.sh 
+```
+#### Otherwise
+```
+python experiment_sani_uniform.py --sequential_run
+python experiment_sani_binomial.py --sequential_run
+
+```
+#### Get Tables 1, 2
+```
+python experiment_sani_uniform.py --results
+```
+#### Get Table 6
+```
+python experiment_sani_binomial.py --results
+```
+
 ## Reproduce UKBB application
 
 #### If you use a slurm cluster  
@@ -68,7 +114,7 @@ python experiment_coverage_uniform.py --results
 python experiment_ukbb.py --get_parameters_experiment
 ```
 ```
-sbatch submit_ukbb_experiment.sh 
+sbatch submit_jobs/submit_ukbb_experiment.sh 
 ```
 #### Otherwise
 ```
