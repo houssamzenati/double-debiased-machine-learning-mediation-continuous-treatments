@@ -2,6 +2,17 @@
 
 This is the code for the DML mediation project with continuous treatments. 
 
+Please cite our work if you find it useful for your research and work:
+```
+@inproceedings{
+zenati2025double,
+title={Double Debiased Machine Learning for Mediation Analysis with Continuous Treatments},
+author={Houssam Zenati and Judith Ab{\'e}cassis and Julie Josse and Bertrand Thirion},
+booktitle={The 28th International Conference on Artificial Intelligence and Statistics},
+year={2025},
+}
+```
+
 ## Prerequisites and environment setup, create your conda environment (python 3.12) and run
 
 ```
