@@ -1,6 +1,6 @@
 # Double Debiased Machine Learning for Mediation Analysis with Continuous Treatments
 
-This is the code for our [DML mediation paper with continuous treatments.]([https://exemple.com](https://arxiv.org/abs/2503.06156))
+This is the code for our [DML mediation paper with continuous treatments.](https://arxiv.org/abs/2503.06156)
 
 Please cite our work if you find it useful for your research and work:
 ```
