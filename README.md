@@ -4,12 +4,14 @@ This is the code for our [DML mediation paper with continuous treatments.](https
 
 Please cite our work if you find it useful for your research and work:
 ```
-@inproceedings{
-zenati2025double,
-title={Double Debiased Machine Learning for Mediation Analysis with Continuous Treatments},
-author={Houssam Zenati and Judith Ab{\'e}cassis and Julie Josse and Bertrand Thirion},
-booktitle={The 28th International Conference on Artificial Intelligence and Statistics},
-year={2025},
+@misc{zenati2025doubledebiasedmachinelearning,
+      title={Double Debiased Machine Learning for Mediation Analysis with Continuous Treatments}, 
+      author={Houssam Zenati and Judith Abécassis and Julie Josse and Bertrand Thirion},
+      year={2025},
+      eprint={2503.06156},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML},
+      url={https://arxiv.org/abs/2503.06156}, 
 }
 ```
 
